@@ -63,7 +63,11 @@ class CurrentUserListener
         if ($this->securityContext) {
             $token = $this->securityContext->getToken();
             if ($token && $token->isAuthenticated()) {
-                $this->auditConfiguration->setCurrentUsername($token->getUser()->getFullname());
+                if ($token->getUser() instanceof \Sonata\UserBundle\Model\User) {
+                    $this->auditConfiguration->setCurrentUsername($token->getUser()->getFullname());
+                } else {
+                    $this->auditConfiguration->setCurrentUsername($token->getUsername());
+                }
             }
         }
     }
